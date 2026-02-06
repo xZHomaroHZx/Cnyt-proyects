@@ -1,0 +1,259 @@
+#el codigo lo he tomado de un repositorio
+#!/usr/bin/env python
+## coding: utf-8
+# Modulo para operar con matrices (http://code.google.com/p/modulo-matrices-python/)
+# Información sobre el uso de las funciones con ejemplos detallados (http://code.google.com/p/modulo-matrices-python/wiki/Funciones)
+# Authors:
+#    Diego Rasero
+#    Felipe Hommen
+# This python module is distributed under the terms of GPLv3 license
+
+
+
+
+def cuadrada(M):
+    """Verifica que se trata de una matriz cuadrada"""
+    if x(M)==y(M):
+        return True
+    else:
+        return False
+        
+def idempotente(M):
+    """Comprueba si la matriz es idempotente, es decir si al elevarla al cuadrado es igual a la original"""
+    if M == potencia(M, 2):
+        return True
+    else:
+        return False
+        
+def involutiva(M):
+    """Comprueba si la matriz es involutiva, es decir si al elevarla al cuadrado es igual a la identidad"""
+    if cuadrada(M):
+        if Midentidad(x(M)) == potencia(M, 2):
+            return True
+        else:
+            return False
+    else: 
+        return False
+  
+def antisimetrica(M):
+    """Comprueba si la matriz es antisimetrica, es decir si su transpuesta negativa es igual a la original"""
+    if cuadrada(M):
+        if M == prodnr(traspuesta(M) , -1):
+            return True
+        else: 
+            return False
+    else: 
+        return False
+
+def ortogonal(M):
+    """Comprueba si la matriz es ortogonal, es decir si el producto de ella por su transpuesta es la identidad"""
+    if cuadrada(M):
+        if producto(M, traspuesta(M)) == Midentidad(x(M)):
+            return True
+        else: return False
+    else: return False
+       
+def diagonalprincipal(M):
+    """ Devuelve la diagonal principal de una matriz"""
+    if cuadrada(M):
+        D=[]
+        if x(M)==1:
+            D=[[M[0][0]]]
+        else:
+            for i in range(0, (x(M)*y(M)), (x(M)+1)):
+                D.append(M[0][i])
+        return D
+
+def diagonalsecundaria(M):
+    """ Devuelve la diagonal secundaria de una matriz"""
+    if cuadrada(M):
+        D=[]
+        if x(M)==1:
+            D=[[M[0][0]]]
+        else:
+            for i in range((y(M)-1), (y(M)*(y(M)-1))+1, (y(M)-1)):
+                D.append(M[0][i])
+        return D
+
+def simetrica(M):
+    """comprueba la simetria de una matriz"""
+    if cuadrada(M):
+        num=0
+        for i in range(y(M)):
+            if fila(M, i)==columna(M, i):
+                num=num+1
+        if num==y(M):
+            return True
+        else:
+            return False
+    else:
+        return False
+
+def Mlistasfilas(M):
+    """Cambia el formato de las matrices a una lista con sublistas del tamaño de las columnas"""
+    A=[]
+    for f in range(1, x(M)+1):
+        A.append(fila(M, f))
+    return A
+
+def Mlistadoble(M):
+    """Cambia el formato de las matrices a una lista con dos sublistas una con todos los elementos y otra con las dimensiones"""
+    A=[]
+    for i in range(len(M)):
+        A+=M[i]
+    return [A, [len(M), len(M[0])]]
+
+def imprime(M):
+    """Imprime la matriz de forma ordenada"""
+    string=""
+    print("")
+    for f in range(1, x(M)+1):
+        for n in fila(M, f):
+            if n<10:
+                string=string+"   "+str(n)
+            elif n<100:
+                string=string+"  "+str(n)
+            else:
+                string=string+" "+str(n)
+        print(string)
+        string=""
+    print("")
+
+def Mnula(x, y):
+    """ Crea una matriz nula"""
+    A=[0]*x*y
+    return [A, [x, y]]
+
+def Midentidad(x):
+    """ Crea una matriz identidad"""
+    A=Mnula(x, x)
+    for i in range(0, (x*x), (x+1)):
+        A[0][i]=1
+    return A
+
+def Maleatoria():
+    """Crea una matriz de dimensiones aleatorias con un numeros aleatorios"""
+    pass
+
+def suma(M1, M2):
+    """Suma de dos matrices de las mismas dimensiones"""
+    if y(M1)==y(M2) and x(M1)==x(M2):
+        A=[]
+        for i in range(y(M1)*x(M1)):
+            A=A+[M1[0][i]+M2[0][i]]
+        return [A, [y(M1), x(M1)]]
+
+def resta(M1, M2):
+    """Resta de dos matrices de las mismas dimensiones"""
+    if y(M1)==y(M2) and x(M1)==x(M2):
+        A=[]
+        for i in range(y(M1)*x(M1)):
+            A=A+[M1[0][i]-M2[0][i]]
+        return [A, [y(M1), x(M1)]]
+
+def prodnr(M, k):
+    """Producto de un número real por una matriz"""
+    A=[]
+    for i in range(y(M)*x(M)):
+        A=A+[M[0][i]*k]
+    return [A, [y(M), x(M)]]
+
+def producto(M1, M2):
+    """Producto de dos matrices"""
+    def mys(l1, l2):
+        """Multiplica dos listas iguales y suma el resultado"""
+        if len(l1)==len(l2):
+            n=0
+            for i in range(len(l1)):
+                n+=l1[i]*l2[i]
+            return n
+
+    if y(M1)==x(M2):
+        A=[[], [x(M1), y(M2)]]
+        for f in range(1, x(M1)+1):
+            for c in range(1, y(M2)+1):
+                A[0].append(mys(fila(M1, f), columna(M2, c)))
+        return A
+    else:
+        return error(1)
+
+def potencia(M, n):
+    """Potencia de una matriz"""
+    if n==1:
+        return M
+    else:
+        A=M
+        for i in range(2, n+1):
+            A=producto(M, A)
+        return A
+
+def det(M):
+    """Resuelve el determinante de la matriz M"""
+    if cuadrada(M):
+        if y(M)==1:
+            return M[0][0]
+        elif y(M)==2:
+            return (M[0][0]*M[0][3])-(M[0][2]*M[0][1])
+        elif y(M)==3:
+            return ((M[0][0]*M[0][4]*M[0][8])+(M[0][2]*M[0][3]*M[0][7])+(M[0][1]*M[0][5]*M[0][6]))-((M[0][2]*M[0][4]*M[0][6])+(M[0][1]*M[0][3]*M[0][8])+(M[0][0]*M[0][5]*M[0][7]))
+        else:
+            f1=fila(M, 1)
+            deter=0
+            for n in range(y(M)):
+                subM=[]
+                for nfila in range(2, y(M)+1):
+                    fi=fila(M, nfila)
+                    del fi[n]
+                    subM+=fi
+                deter+=f1[n]*((-1)**n)*det([subM, [y(M)-1, y(M)-1]])
+            return deter
+
+def traspuesta(M):
+    """Devuelve la matriz traspuesta a M"""
+    A=[]
+    for col in range(1, y(M)+1):
+        A+=columna(M, col)
+    return [A, [y(M), x(M)]]
+
+def matrizAdjunta(M):
+    """Calcula la matriz adjunta de M"""
+    if not cuadrada(M):
+        return None
+    if x(M)==1:
+        return M[:]
+    if x(M)==2:
+        A=[ [ M[0][3],-M[0][2],-M[0][1], M[0][0] ], [2, 2] ]
+        return A
+    A=Mnula(x(M), y(M))
+    for i in range(1, x(M)+1):
+        for j in range(1, y(M)+1):
+            subM=submatriz(M, i, j)
+            A[0][(i-1)*y(M)+j-1]=(-1)**(i+j)*det(subM)
+    return A
+
+def inversa(M):
+    """Devuelve la matriz inversa a M"""
+    if cuadrada(M):
+        detm=det(M)
+        if detm!=0:
+            Madj=matrizAdjunta(M)
+            return traspuesta(prodnr(Madj, (fractions.Fraction(1 , detm))))
+        else:
+            return error(3)
+    else:
+        return error(2), error(3)
+
+def submatriz(M, f, c):
+    """Elimina la fila f y la columna c de una matriz (menor complementario)"""
+    if x(M)<2:
+        sys.stderr.write("Imposible eliminar la única fila de una matriz al tratar de extraer una submatriz")
+        return None
+    if y(M)<2:
+        sys.stderr.write("Imposible eliminar la única columna de una matriz al tratar de extraer una submatriz")
+    A=[M[0][:], M[1][:]]
+    del A[0][(f-1)*y(A): f*y(A)]
+    for i in range(len(A[0])-y(A)+c, 0,-y(A)):
+        del A[0][i-1]
+    A[1][0]=A[1][0]-1
+    A[1][1]=A[1][1]-1
+    return A
